@@ -41,7 +41,9 @@ export class MemStorage implements IStorage {
 
   async createQuestion(question: InsertQuestion): Promise<Question> {
     const id = this.questionIdCounter++;
-    const newQuestion: Question = { ...question, id };
+    // Ensure options is an array and not undefined
+    const options = question.options || [];
+    const newQuestion: Question = { ...question, options, id };
     this.questions.set(id, newQuestion);
     return newQuestion;
   }
@@ -67,9 +69,25 @@ export class MemStorage implements IStorage {
   }
 
   private seedQuestions() {
-    const predefinedQuestions: InsertQuestion[] = [
+    // Predefined questions for testing - we'll pick 10 random questions from this larger set
+    const questionPool: InsertQuestion[] = [
+      // Basic questions (absurdity level 1-3)
       {
         questionText: "What was the name of your first pet?",
+        questionType: "text",
+        options: [],
+        order: 1,
+        absurdityLevel: 1
+      },
+      {
+        questionText: "What street did you grow up on?",
+        questionType: "text",
+        options: [],
+        order: 1,
+        absurdityLevel: 1
+      },
+      {
+        questionText: "What was your mother's maiden name?",
         questionType: "text",
         options: [],
         order: 1,
@@ -83,6 +101,22 @@ export class MemStorage implements IStorage {
         absurdityLevel: 3
       },
       {
+        questionText: "What is the name of the invisible friend you had as a child?",
+        questionType: "text",
+        options: [],
+        order: 2,
+        absurdityLevel: 3
+      },
+      {
+        questionText: "What mathematical equation do you find most attractive?",
+        questionType: "radio",
+        options: ["E=mc²", "Pythagorean theorem", "Fibonacci sequence", "Math gives me hives"],
+        order: 2,
+        absurdityLevel: 3
+      },
+      
+      // Medium questions (absurdity level 4-6)
+      {
         questionText: "If your password was a sandwich, what kind would it be?",
         questionType: "text",
         options: [],
@@ -90,13 +124,39 @@ export class MemStorage implements IStorage {
         absurdityLevel: 4
       },
       {
+        questionText: "What would your password wear to a formal dinner party?",
+        questionType: "select",
+        options: [
+          "A classic tuxedo",
+          "An elegant evening gown",
+          "Jeans and a t-shirt (it's rebellious)",
+          "Birthday suit (it's a nudist)",
+          "A tin foil hat (for security)"
+        ],
+        order: 3,
+        absurdityLevel: 4
+      },
+      {
         questionText: "How many times did you lie on forms today?",
         questionType: "radio",
         options: [
-          "None, I am a paragon of honesty",
+          "Never (I'm honest)",
           "1-3 times (rookie numbers)",
           "4+ times (professional)",
           "I'm lying right now"
+        ],
+        order: 4,
+        absurdityLevel: 5
+      },
+      {
+        questionText: "How would you describe your password's personality?",
+        questionType: "select",
+        options: [
+          "Strong and silent type",
+          "Bubbly and outgoing",
+          "Mysterious and complicated",
+          "Boring but reliable",
+          "Chaotic evil"
         ],
         order: 4,
         absurdityLevel: 5
@@ -107,22 +167,49 @@ export class MemStorage implements IStorage {
         options: [
           "Baseball bat",
           "Chainsaw",
-          "Frying pan",
-          "Biting sarcasm",
-          "Keyboard warrior skills"
+          "Katana",
+          "My bare hands"
         ],
         order: 5,
         absurdityLevel: 6
       },
+      {
+        questionText: "If your password was an ice cream flavor, what would it be?",
+        questionType: "text",
+        options: [],
+        order: 5,
+        absurdityLevel: 6
+      },
+      {
+        questionText: "What's your password's greatest fear?",
+        questionType: "radio",
+        options: [
+          "Being forgotten",
+          "Being written down on a Post-it note",
+          "Being too simple",
+          "Password managers (they're taking our jobs!)"
+        ],
+        order: 5,
+        absurdityLevel: 6
+      },
+      
+      // Advanced questions (absurdity level 7-10)
       {
         questionText: "What did your pet [PET_NAME] think of your first password?",
         questionType: "radio",
         options: [
           "They loved it",
           "They thought it was too predictable",
-          "They never saw it (I'm security conscious)",
-          "Wait, my pet can read?"
+          "They suggested I add more special characters",
+          "They tried to eat my keyboard"
         ],
+        order: 6,
+        absurdityLevel: 7
+      },
+      {
+        questionText: "If your password was running for political office, what would be its campaign slogan?",
+        questionType: "text",
+        options: [],
         order: 6,
         absurdityLevel: 7
       },
@@ -134,13 +221,34 @@ export class MemStorage implements IStorage {
         absurdityLevel: 8
       },
       {
+        questionText: "If your consciousness was uploaded to the cloud, what would be your new username?",
+        questionType: "text",
+        options: [],
+        order: 7,
+        absurdityLevel: 8
+      },
+      {
         questionText: "If your password had a theme song, which genre would it be?",
         questionType: "checkbox",
         options: [
-          "Classical (so sophisticated!)",
-          "Heavy Metal (secure but hard to remember)",
-          "Pop (probably too common)",
-          "Silent movie soundtrack (you use 'password123', don't you?)"
+          "Classical",
+          "Rock",
+          "Hip hop",
+          "Country",
+          "Electronic"
+        ],
+        order: 8,
+        absurdityLevel: 8
+      },
+      {
+        questionText: "Which of these dreams has your password had recently?",
+        questionType: "checkbox",
+        options: [
+          "Flying through the internet",
+          "Being replaced by a stronger password",
+          "Dating other passwords from different websites",
+          "World domination",
+          "Just trying to be remembered"
         ],
         order: 8,
         absurdityLevel: 8
@@ -153,15 +261,67 @@ export class MemStorage implements IStorage {
         absurdityLevel: 9
       },
       {
+        questionText: "Your password has started a support group. What is it called?",
+        questionType: "text",
+        options: [],
+        order: 9,
+        absurdityLevel: 9
+      },
+      {
         questionText: "Final security verification: The most embarrassing thing I've ever done while no one was watching is...",
+        questionType: "text",
+        options: [],
+        order: 10,
+        absurdityLevel: 10
+      },
+      {
+        questionText: "If your password could see what websites you visit, what would it think of you?",
         questionType: "text",
         options: [],
         order: 10,
         absurdityLevel: 10
       }
     ];
-
-    predefinedQuestions.forEach(question => {
+    
+    // Select 10 questions, ensuring we maintain a progression of absurdity
+    const selectedQuestions: InsertQuestion[] = [];
+    
+    // Add one question from each absurdity level (1-10)
+    for (let level = 1; level <= 10; level++) {
+      const questionsAtLevel = questionPool.filter(q => q.absurdityLevel === level);
+      if (questionsAtLevel.length > 0) {
+        const randomIndex = Math.floor(Math.random() * questionsAtLevel.length);
+        const selected = {...questionsAtLevel[randomIndex]};
+        selected.order = level; // Ensure order matches the loop iteration
+        selectedQuestions.push(selected);
+      }
+    }
+    
+    // If we don't have 10 questions yet (due to missing absurdity levels), fill in with any remaining
+    while (selectedQuestions.length < 10) {
+      const remainingQuestions = questionPool.filter(q => 
+        !selectedQuestions.some(selected => selected.questionText === q.questionText)
+      );
+      if (remainingQuestions.length === 0) break;
+      
+      const randomIndex = Math.floor(Math.random() * remainingQuestions.length);
+      const selected = {...remainingQuestions[randomIndex]};
+      // Find the next available order number
+      const usedOrders = selectedQuestions.map(q => q.order);
+      for (let i = 1; i <= 10; i++) {
+        if (!usedOrders.includes(i)) {
+          selected.order = i;
+          break;
+        }
+      }
+      selectedQuestions.push(selected);
+    }
+    
+    // Sort by order for consistency
+    selectedQuestions.sort((a, b) => a.order - b.order);
+    
+    // Create the questions
+    selectedQuestions.forEach(question => {
       this.createQuestion(question);
     });
   }

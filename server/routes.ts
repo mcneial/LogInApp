@@ -81,8 +81,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
         case "radio":
         case "select":
-          // Specific responses based on the question ID and actual answer
-          if (questionId === 4) { // Lying on forms
+          // Get question from database to check its text for more varied responses
+          const question = await storage.getQuestionById(questionId);
+          
+          // Specific responses based on the question text and answer
+          if (question?.questionText.includes("lie on forms")) { // Lying on forms
             if (answer === "Never (I'm honest)") {
               responseMessage = "That's obviously a lie. No one is that honest on forms.";
             } else if (answer === "1-3 times (rookie numbers)") {
@@ -92,7 +95,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             } else if (answer === "I'm lying right now") {
               responseMessage = "If you're lying about lying, are you actually telling the truth? Our security AI is having an existential crisis.";
             }
-          } else if (questionId === 5) { // Zombie weapon
+          } else if (question?.questionText.includes("zombie apocalypse")) { // Zombie weapon
             if (answer === "Baseball bat") {
               responseMessage = "Classic choice! Though our security team rates this a 3/10 for zombie defense. Try adding nails next time.";
             } else if (answer === "Chainsaw") {
@@ -101,8 +104,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
               responseMessage = "While you studied security questions, your password studied the blade. *Tips fedora*";
             } else if (answer === "My bare hands") {
               responseMessage = "Bold strategy! We've noted your overconfidence in our 'Will Be Zombie Food First' database.";
+            } else if (answer === "Frying pan") {
+              responseMessage = "Ah, the PUBG strategy. Hope you've been practicing your aim.";
+            } else if (answer === "Biting sarcasm") {
+              responseMessage = "Zombies are notably immune to sarcasm, but your wit is appreciated in our office.";
+            } else if (answer === "Keyboard warrior skills") {
+              responseMessage = "You plan to type the zombies to death? Bold strategy. Let us know how that works out.";
             }
-          } else if (questionId === 6) { // Pet password opinion
+          } else if (question?.questionText.includes("pet") && question?.questionText.includes("password")) { // Pet password opinion
             if (answer === "They loved it") {
               responseMessage = "Your pet has surprisingly low security standards. We're concerned.";
             } else if (answer === "They thought it was too predictable") {
@@ -111,8 +120,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
               responseMessage = "Ah, your pet must be a cybersecurity professional. Those special characters will protect against their claws.";
             } else if (answer === "They tried to eat my keyboard") {
               responseMessage = "Keyboard eating: the most secure way to prevent password theft. Your pet is a security genius.";
+            } else if (answer === "They never saw it (I'm security conscious)") {
+              responseMessage = "Trust issues with your own pet? Smart. They're probably selling your data to Petflix.";
+            } else if (answer === "Wait, my pet can read?") {
+              responseMessage = "Plot twist: Your pet has been reading your diary for years. Nothing is safe.";
             }
-          } else if (questionId === 8) { // Password music
+          } else if (question?.questionText.includes("theme song") || question?.questionText.includes("genre")) { // Password music
             if (answer && answer.includes("Classical")) {
               responseMessage = "Your password appreciates the sophistication. It's wearing a monocle now.";
             } else if (answer && answer.includes("Rock")) {
@@ -123,8 +136,82 @@ export async function registerRoutes(app: Express): Promise<Server> {
               responseMessage = "Your password just put on a cowboy hat and started singing about broken relationships.";
             } else if (answer && answer.includes("Electronic")) {
               responseMessage = "Your password is now blinking in sync with a 140 BPM techno beat. It's quite distracting.";
+            } else if (answer && answer.includes("Heavy Metal")) {
+              responseMessage = "Your password is now dressed all in black and refuses to talk to the other passwords.";
+            } else if (answer && answer.includes("Silent movie")) {
+              responseMessage = "Your password is now communicating solely through exaggerated gestures and title cards.";
+            } else if (answer && answer.includes("Pop")) {
+              responseMessage = "Your password just got a record deal and is moving to LA. Say goodbye to your data.";
             } else {
               responseMessage = "Your password's musical choices have been noted, though it seems to have eclectic taste.";
+            }
+          } else if (question?.questionText.includes("17th digit of π")) { // Pi question
+            if (answer === "9") {
+              responseMessage = "Either you're a math genius or you're really good at guessing. We're suspicious.";
+            } else if (answer === "5") {
+              responseMessage = "Did you just look that up? We're monitoring your search history, you know.";
+            } else if (answer === "3") {
+              responseMessage = "Interesting choice. 3 is in π, just not at the 17th position. We appreciate the effort though.";
+            } else if (answer === "I don't memorize irrational numbers") {
+              responseMessage = "A reasonable stance. Yet, somehow disappointing for our security algorithm.";
+            }
+          } else if (question?.questionText.includes("mathematical equation")) { // Math equation
+            if (answer === "E=mc²") {
+              responseMessage = "Classic choice. Your password is relatively secure now. Get it? Relatively?";
+            } else if (answer === "Pythagorean theorem") {
+              responseMessage = "Right-angled thinking! Your password feels more balanced already.";
+            } else if (answer === "Fibonacci sequence") {
+              responseMessage = "Your security is now growing at an exponential rate. Or a Fibonacci rate, to be precise.";
+            } else if (answer === "Math gives me hives") {
+              responseMessage = "We've prescribed some anti-mathematical cream for your condition. Apply liberally to all calculations.";
+            }
+          } else if (question?.questionText.includes("password wear")) { // Password formal wear
+            if (answer === "A classic tuxedo") {
+              responseMessage = "Your password is now the most elegant code at the ball. The other passwords are jealous.";
+            } else if (answer === "An elegant evening gown") {
+              responseMessage = "Your password just turned every head in the database. Scandalous!";
+            } else if (answer === "Jeans and a t-shirt (it's rebellious)") {
+              responseMessage = "Your password was denied entry to the data gala. It's now starting its own cooler party.";
+            } else if (answer === "Birthday suit (it's a nudist)") {
+              responseMessage = "We've had to censor your password in our database. Think of the children!";
+            } else if (answer === "A tin foil hat (for security)") {
+              responseMessage = "Your password can now block government mind control rays, but it looks ridiculous at parties.";
+            }
+          } else if (question?.questionText.includes("password's personality")) { // Password personality
+            if (answer === "Strong and silent type") {
+              responseMessage = "Your password just nodded slightly in acknowledgment. That's as emotional as it gets.";
+            } else if (answer === "Bubbly and outgoing") {
+              responseMessage = "Your password is now friends with every other password in the database. Security breach imminent.";
+            } else if (answer === "Mysterious and complicated") {
+              responseMessage = "Even we don't understand your password, and we created it. Impressive!";
+            } else if (answer === "Boring but reliable") {
+              responseMessage = "Your password will always be there for you. Unlike your ex.";
+            } else if (answer === "Chaotic evil") {
+              responseMessage = "Your password just set fire to our server room. Thanks for that.";
+            }
+          } else if (question?.questionText.includes("password's greatest fear")) { // Password fear
+            if (answer === "Being forgotten") {
+              responseMessage = "Your password is crying in the corner now. We hope you're happy.";
+            } else if (answer === "Being written down on a Post-it note") {
+              responseMessage = "Your password is now having nightmares about yellow squares. Thanks a lot.";
+            } else if (answer === "Being too simple") {
+              responseMessage = "Your password is having an existential crisis now. 'Am I complex enough to exist?'";
+            } else if (answer === "Password managers (they're taking our jobs!)") {
+              responseMessage = "Your password has joined a protest against automation. It's carrying a tiny sign.";
+            }
+          } else if (question?.questionText.includes("password's dreams")) { // Password dreams
+            if (answer && answer.includes("Flying through the internet")) {
+              responseMessage = "Your password needs to be careful. The internet is a dangerous place for unsupervised alphanumerics.";
+            } else if (answer && answer.includes("Being replaced")) {
+              responseMessage = "Your password has abandonment issues. Consider therapy.";
+            } else if (answer && answer.includes("Dating other passwords")) {
+              responseMessage = "We don't recommend cross-site password relationships. They never end well.";
+            } else if (answer && answer.includes("World domination")) {
+              responseMessage = "We're now monitoring your password for signs of megalomaniacal behavior.";
+            } else if (answer && answer.includes("remembered")) {
+              responseMessage = "Your password just wants to be loved. Is that too much to ask?";
+            } else {
+              responseMessage = "Your password's dreams are both fascinating and concerning.";
             }
           } else {
             // Fallback random responses
@@ -133,7 +220,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
               "Really? That's what you're going with?",
               "Our security experts are very impressed with this selection.",
               "That's exactly what someone trying to hack an account would choose!",
-              "Fascinating selection. We're adding this to your psychological profile."
+              "Fascinating selection. We're adding this to your psychological profile.",
+              "This answer will be referenced in your upcoming psychological evaluation.",
+              "Our AI just spit out its virtual coffee reading this response.",
+              "Your answer has been flagged for being suspiciously normal.",
+              "This is going in your permanent record. Yes, we keep one of those."
             ];
             responseMessage = multipleChoiceResponses[Math.floor(Math.random() * multipleChoiceResponses.length)];
           }
