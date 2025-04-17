@@ -11,3 +11,43 @@
     @apply font-sans antialiased bg-background text-foreground;
   }
 }
+
+/* Easter egg animation for 100 login attempts */
+@keyframes rainbow-bg {
+  0% { background-color: #ff0000; }
+  14% { background-color: #ff7f00; }
+  28% { background-color: #ffff00; }
+  42% { background-color: #00ff00; }
+  56% { background-color: #0000ff; }
+  70% { background-color: #4b0082; }
+  84% { background-color: #8f00ff; }
+  100% { background-color: #ff0000; }
+}
+
+.rainbow-background {
+  animation: rainbow-bg 5s linear infinite;
+}
+
+.rainbow-background h1,
+.rainbow-background label,
+.rainbow-background input,
+.rainbow-background button {
+  animation: rainbow-bg 5s linear infinite reverse;
+  font-weight: bold !important;
+}
+
+.rainbow-background .flex-grow {
+  transform: rotate(3deg);
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(5px); }
+  50% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+  100% { transform: translateX(0); }
+}
+
+.rainbow-background .container {
+  animation: shake 0.5s infinite;
+}

@@ -70,12 +70,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       switch (question.questionType) {
         case "text":
-          if (answer.trim().length < 3) {
+          // Varied generic responses for text input
+          const genericTextResponses = [
+            "Interesting choice. Our AI will judge this... I mean, verify this shortly.",
+            "That's an unexpected response! Our system needs a moment to process this.",
+            "We've added your answer to our 'Humans Are Strange' database.",
+            "Your response has caused our security algorithm to question its existence.",
+            "This answer is so unique, we're considering using it as a new captcha.",
+            "Our security team is both intrigued and mildly concerned.",
+            "We'll take that under advisement. And by that, we mean we'll laugh about it later.",
+            "Your answer has been carefully preserved for future psychological studies.",
+            "That's certainly... creative. Our AI is unsure whether to be impressed or worried.",
+            "This response will be studied by future digital archaeologists.",
+            "Your creativity has been noted in your permanent file.",
+            "Well, that was unexpected. Our security robot just sighed audibly.",
+            "Fascinating! We've created a new database category just for this answer."
+          ];
+          
+          // Get question text to provide more relevant responses
+          const responseQuestion = await storage.getQuestionById(questionId);
+          
+          // Specific responses for political slogan question
+          if (responseQuestion?.questionText.includes("political office") || responseQuestion?.questionText.includes("campaign slogan")) {
+            responseMessage = "Your password's political career is off to a promising start!";
+          } 
+          // Check for ice cream question
+          else if (responseQuestion?.questionText.includes("ice cream flavor")) {
+            responseMessage = "That flavor sounds delicious and completely insecure as a password!";
+          }
+          // Check for support group question
+          else if (responseQuestion?.questionText.includes("support group")) {
+            responseMessage = "Your password's support group has 247 members already!";
+          }
+          // Other text responses
+          else if (answer.trim().length < 3) {
             responseMessage = "That's... surprisingly brief. Are you hiding something?";
           } else if (answer.trim().length > 50) {
             responseMessage = "Wow, somebody likes to type! We appreciate the enthusiasm.";
           } else {
-            responseMessage = "Interesting choice. Our AI will judge this... I mean, verify this shortly.";
+            // Select a random response from our expanded list
+            responseMessage = genericTextResponses[Math.floor(Math.random() * genericTextResponses.length)];
           }
           break;
           

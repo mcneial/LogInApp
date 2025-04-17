@@ -29,8 +29,28 @@ export default function LoginPage() {
     const newAttempts = loginAttempts + 1;
     setLoginAttempts(newAttempts);
     
+    // Easter egg: On 100th attempt, show a special message and do something funny
+    if (newAttempts === 100) {
+      // Show the Easter egg message
+      toast({
+        title: "🎉 CONGRATULATIONS! 🎉",
+        description: "You've clicked 'Sign in' 100 times! In recognition of your extraordinary persistence, we've created an account for you. Just kidding - that would be ridiculous. But we're impressed by your dedication!",
+        variant: "default",
+        duration: 10000, // Extra long duration
+      });
+      
+      // Play with the UI for fun
+      document.body.classList.add("rainbow-background");
+      setTimeout(() => {
+        document.body.classList.remove("rainbow-background");
+      }, 10000);
+      
+      setLoginError("Well, we DID say something would happen on the 100th try. This is it. Underwhelming, isn't it?");
+      return;
+    }
+    
     // Generate increasingly annoyed error messages
-    let errorMessage: string;
+    let errorMessage = "Login failed. Invalid username or password.";
     
     if (newAttempts === 1) {
       errorMessage = "Login failed. Invalid username or password.";
@@ -46,8 +66,16 @@ export default function LoginPage() {
       errorMessage = "Seriously, stop trying. This account doesn't exist. Never has.";
     } else if (newAttempts === 7) {
       errorMessage = "This is getting awkward. There's literally no account to log into.";
-    } else if (newAttempts >= 8) {
+    } else if (newAttempts >= 8 && newAttempts < 20) {
       errorMessage = "Fine. Keep clicking. Maybe on the 100th try, we'll create an account for you. (We won't)";
+    } else if (newAttempts >= 20 && newAttempts < 50) {
+      errorMessage = `You've tried ${newAttempts} times. Only ${100 - newAttempts} more to go until... something happens?`;
+    } else if (newAttempts >= 50 && newAttempts < 90) {
+      errorMessage = `${100 - newAttempts} more clicks! We can't believe you're still doing this.`;
+    } else if (newAttempts >= 90 && newAttempts < 99) {
+      errorMessage = `Almost there! Only ${100 - newAttempts} more! The anticipation is killing us!`;
+    } else if (newAttempts === 99) {
+      errorMessage = "ONE MORE CLICK! THIS IS SO EXCITING!";
     }
     
     setLoginError(errorMessage);
