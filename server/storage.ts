@@ -27,8 +27,8 @@ export class MemStorage implements IStorage {
     this.questionIdCounter = 1;
     this.answerIdCounter = 1;
     
-    // Seed initial questions
-    this.seedQuestions();
+    // Seed initial questions with the current timestamp to ensure randomness
+    this.seedQuestions(Date.now());
   }
 
   async getQuestions(): Promise<Question[]> {
@@ -68,7 +68,12 @@ export class MemStorage implements IStorage {
     return newAnswer;
   }
 
-  private seedQuestions() {
+  private seedQuestions(seed: number = Date.now()) {
+    // Use the seed to create a simple seeded random function
+    const seededRandom = () => {
+      seed = (seed * 9301 + 49297) % 233280;
+      return seed / 233280;
+    };
     // Predefined questions for testing - we'll pick 10 random questions from this larger set
     const questionPool: InsertQuestion[] = [
       // Basic questions (absurdity level 1-3)
@@ -290,9 +295,26 @@ export class MemStorage implements IStorage {
     for (let level = 1; level <= 10; level++) {
       const questionsAtLevel = questionPool.filter(q => q.absurdityLevel === level);
       if (questionsAtLevel.length > 0) {
-        const randomIndex = Math.floor(Math.random() * questionsAtLevel.length);
+        const randomIndex = Math.floor(seededRandom() * questionsAtLevel.length);
         const selected = {...questionsAtLevel[randomIndex]};
         selected.order = level; // Ensure order matches the loop iteration
+        
+        // Skip pet name-related question if it has [PET_NAME]
+        if (selected.questionText.includes("[PET_NAME]")) {
+          // Try again with a different question if possible
+          if (questionsAtLevel.length > 1) {
+            let newIndex;
+            do {
+              newIndex = Math.floor(seededRandom() * questionsAtLevel.length);
+            } while (newIndex === randomIndex);
+            selected.questionText = questionsAtLevel[newIndex].questionText;
+            selected.options = [...(questionsAtLevel[newIndex].options || [])];
+          } else {
+            // Replace [PET_NAME] with "a pet" if no alternative
+            selected.questionText = selected.questionText.replace("[PET_NAME]", "a pet");
+          }
+        }
+        
         selectedQuestions.push(selected);
       }
     }
@@ -304,8 +326,23 @@ export class MemStorage implements IStorage {
       );
       if (remainingQuestions.length === 0) break;
       
-      const randomIndex = Math.floor(Math.random() * remainingQuestions.length);
+      const randomIndex = Math.floor(seededRandom() * remainingQuestions.length);
       const selected = {...remainingQuestions[randomIndex]};
+      
+      // Check for [PET_NAME] in this question too
+      if (selected.questionText.includes("[PET_NAME]")) {
+        // Try to find a non-pet alternative
+        const nonPetOptions = remainingQuestions.filter(q => !q.questionText.includes("[PET_NAME]"));
+        if (nonPetOptions.length > 0) {
+          const newIndex = Math.floor(seededRandom() * nonPetOptions.length);
+          selected.questionText = nonPetOptions[newIndex].questionText;
+          selected.options = [...(nonPetOptions[newIndex].options || [])];
+        } else {
+          // If no alternatives, replace [PET_NAME] with "a pet"
+          selected.questionText = selected.questionText.replace("[PET_NAME]", "a pet");
+        }
+      }
+      
       // Find the next available order number
       const usedOrders = selectedQuestions.map(q => q.order);
       for (let i = 1; i <= 10; i++) {
@@ -314,6 +351,7 @@ export class MemStorage implements IStorage {
           break;
         }
       }
+      
       selectedQuestions.push(selected);
     }
     

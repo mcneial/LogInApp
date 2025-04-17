@@ -19,18 +19,21 @@ export function useQuestionFlow() {
   const [isLoading, setIsLoading] = useState(false);
 
   // Fetch all questions
-  const { data: questions = [], isLoading: questionsLoading } = useQuery({
+  const { data, isLoading: questionsLoading } = useQuery<SecurityQuestion[]>({
     queryKey: ["/api/questions"],
     enabled: !!sessionId,
   });
+  
+  // Ensure questions are of the right type
+  const questions: SecurityQuestion[] = data || [];
 
   // Get current question
   const currentQuestion: SecurityQuestion | undefined = questions.find(
-    (q: SecurityQuestion) => q.order === currentQuestionIndex
+    (q) => q.order === currentQuestionIndex
   );
 
   // Calculate total questions and progress
-  const totalQuestions = questions.length;
+  const totalQuestions = questions.length || 10;
   const progressPercent = (currentQuestionIndex / totalQuestions) * 100;
 
   // Create a new session
