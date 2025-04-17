@@ -290,8 +290,8 @@ export default function SecurityQuestion({
           disabled={isSubmitDisabled()}
           className={`w-full ${
             absurdityLevel >= 9 
-              ? "bg-secondary hover:bg-red-500 animate-pulse" 
-              : ""
+              ? "bg-secondary hover:bg-red-500 animate-pulse text-white" 
+              : "text-white"
           }`}
         >
           {isLast ? "Complete Verification" : "Continue"}
