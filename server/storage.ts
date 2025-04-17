@@ -355,8 +355,13 @@ export class MemStorage implements IStorage {
       selectedQuestions.push(selected);
     }
     
-    // Sort by order for consistency
-    selectedQuestions.sort((a, b) => a.order - b.order);
+    // Assign unique sequential order numbers from 1-10
+    selectedQuestions.sort((a, b) => a.absurdityLevel - b.absurdityLevel || a.questionText.localeCompare(b.questionText));
+    
+    // Assign unique order numbers 1-10
+    for (let i = 0; i < selectedQuestions.length; i++) {
+      selectedQuestions[i].order = i + 1;
+    }
     
     // Create the questions
     selectedQuestions.forEach(question => {
