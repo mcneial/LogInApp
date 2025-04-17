@@ -157,7 +157,6 @@ export default function SecurityQuestion({
           <RadioGroup 
             value={radioAnswer} 
             onValueChange={(value) => {
-              console.log("Radio value changed to:", value);
               setRadioAnswer(value);
             }}
             className="space-y-3"
@@ -167,11 +166,11 @@ export default function SecurityQuestion({
                 <RadioGroupItem 
                   id={`q-option-${question.id}-${index}`} 
                   value={option}
-                  className={absurdityLevel >= 4 ? "text-secondary focus:ring-secondary" : ""}
+                  className={absurdityLevel >= 4 ? "text-primary border-primary focus:ring-primary" : ""}
                 />
                 <Label 
                   htmlFor={`q-option-${question.id}-${index}`}
-                  className="ml-2 block text-sm"
+                  className={`ml-2 block text-sm ${radioAnswer === option ? "font-semibold" : ""}`}
                 >
                   {option}
                 </Label>
@@ -218,11 +217,11 @@ export default function SecurityQuestion({
                 onCheckedChange={(checked) => 
                   handleCheckboxChange(option, checked as boolean)
                 }
-                className={absurdityLevel >= 8 ? "text-pink-500 focus:ring-pink-500" : ""}
+                className={absurdityLevel >= 8 ? "text-pink-600 focus:ring-pink-600 border-pink-400" : "text-primary border-primary"}
               />
               <Label
                 htmlFor={`check-option-${question.id}-${index}`}
-                className="ml-2 block text-sm"
+                className={`ml-2 block text-sm ${checkboxAnswers.includes(option) ? "font-semibold" : ""}`}
               >
                 {option}
               </Label>
@@ -245,12 +244,16 @@ export default function SecurityQuestion({
             value={selectAnswer}
             defaultValue={selectAnswer}
           >
-            <SelectTrigger className={absurdityLevel >= 5 ? "bg-yellow-50" : ""}>
+            <SelectTrigger className={`border-2 ${selectAnswer ? "border-primary" : "border-gray-300"} ${absurdityLevel >= 5 ? "bg-yellow-50" : ""}`}>
               <SelectValue placeholder="Select your answer" />
             </SelectTrigger>
             <SelectContent>
               {question.options.map((option, index) => (
-                <SelectItem key={`select-option-${index}`} value={option}>
+                <SelectItem 
+                  key={`select-option-${index}`} 
+                  value={option}
+                  className={selectAnswer === option ? "font-semibold bg-primary/10" : ""}
+                >
                   {option}
                 </SelectItem>
               ))}
