@@ -138,7 +138,6 @@ export default function SecurityQuestion({
               value={textAnswer}
               onChange={(e) => setTextAnswer(e.target.value)}
               placeholder="Type your answer here"
-              className={absurdityLevel >= 7 ? "border-green-300 focus:ring-green-500" : ""}
             />
           )}
           
