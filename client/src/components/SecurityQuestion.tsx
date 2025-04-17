@@ -291,7 +291,7 @@ export default function SecurityQuestion({
           className={`w-full ${
             absurdityLevel >= 9 
               ? "bg-secondary hover:bg-red-500 animate-pulse text-white" 
-              : "text-white"
+              : "bg-primary hover:bg-primary/90 text-white"
           }`}
         >
           {isLast ? "Complete Verification" : "Continue"}

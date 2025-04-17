@@ -215,21 +215,21 @@ export class MemStorage implements IStorage {
         questionText: "If your password was running for political office, what would be its campaign slogan?",
         questionType: "text",
         options: [],
-        order: 6,
+        order: 7,
         absurdityLevel: 7
       },
       {
         questionText: "Please draw a picture of your password in your mind. On a scale of 1-10, how beautiful was it?",
         questionType: "range",
         options: [],
-        order: 7,
+        order: 8,
         absurdityLevel: 8
       },
       {
         questionText: "If your consciousness was uploaded to the cloud, what would be your new username?",
         questionType: "text",
         options: [],
-        order: 7,
+        order: 9,
         absurdityLevel: 8
       },
       {
