@@ -43,6 +43,17 @@ export default function SecurityQuestion({
 
   // Replace placeholder in question text if needed
   const processedQuestionText = question.questionText.replace("[PET_NAME]", petName);
+  
+  // Add a container class with proper padding and background for better readability
+  const getContainerClass = () => {
+    let baseClass = "p-5 rounded-lg shadow-sm";
+    
+    if (absurdityLevel > 4) {
+      baseClass += " border border-gray-200";
+    }
+    
+    return baseClass;
+  };
 
   const getFontClass = () => {
     return absurdityLevel >= 3 ? "font-comic" : "";
@@ -50,15 +61,15 @@ export default function SecurityQuestion({
 
   const getTextClass = () => {
     if (absurdityLevel <= 2) return "text-gray-800";
-    if (absurdityLevel <= 5) return "text-secondary";
-    if (absurdityLevel <= 8) return "text-purple-800";
-    return "text-yellow-800 transform rotate-1 animate-pulse";
+    if (absurdityLevel <= 5) return "text-primary font-medium";
+    if (absurdityLevel <= 8) return "text-purple-900 font-semibold";
+    return "text-red-800 font-bold transform rotate-1 animate-pulse";
   };
 
   const getBgClass = () => {
     if (absurdityLevel <= 4) return "";
     if (absurdityLevel <= 6) return "bg-yellow-50";
-    if (absurdityLevel <= 8) return "bg-purple-50";
+    if (absurdityLevel <= 8) return "bg-purple-100";
     return "bg-pink-100";
   };
 
@@ -106,8 +117,8 @@ export default function SecurityQuestion({
   };
 
   return (
-    <div className={`question-item ${getBgClass()}`}>
-      <h3 className={`text-lg font-medium mb-3 ${getFontClass()} ${getTextClass()}`}>
+    <div className={`question-item ${getBgClass()} ${getContainerClass()}`}>
+      <h3 className={`text-lg font-medium mb-4 ${getFontClass()} ${getTextClass()}`}>
         {processedQuestionText}
       </h3>
       
