@@ -9,7 +9,7 @@ export default function FinalMessage({ onStartOver }: FinalMessageProps) {
     // In a real app, this would share to social media
     // For now, just show a copied message
     navigator.clipboard.writeText(
-      "I just completed the most absurd password recovery flow ever at SecureLogin™!"
+      "https://securedlogin.replit.app/"
     ).then(() => {
       alert("Link copied! Share this madness with your friends.");
     }).catch(() => {
