@@ -311,7 +311,7 @@ export class MemStorage implements IStorage {
             selected.options = [...(questionsAtLevel[newIndex].options || [])];
           } else {
             // Replace [PET_NAME] with "a pet" if no alternative
-            selected.questionText = selected.questionText.replace("[PET_NAME]", "a pet");
+            selected.questionText = selected.questionText.replace("[PET_NAME] ", "");
           }
         }
         
@@ -339,7 +339,7 @@ export class MemStorage implements IStorage {
           selected.options = [...(nonPetOptions[newIndex].options || [])];
         } else {
           // If no alternatives, replace [PET_NAME] with "a pet"
-          selected.questionText = selected.questionText.replace("[PET_NAME]", "a pet");
+          selected.questionText = selected.questionText.replace("[PET_NAME] ", "");
         }
       }
       
