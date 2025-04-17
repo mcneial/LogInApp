@@ -30,6 +30,16 @@ export default function SecurityQuestion({
   const [checkboxAnswers, setCheckboxAnswers] = useState<string[]>([]);
   const [selectAnswer, setSelectAnswer] = useState("");
   const [agreement, setAgreement] = useState(false);
+  
+  // Reset state when question changes
+  useEffect(() => {
+    setTextAnswer("");
+    setRadioAnswer("");
+    setRangeAnswer("5");
+    setCheckboxAnswers([]);
+    setSelectAnswer("");
+    setAgreement(false);
+  }, [question.id]);
 
   // Replace placeholder in question text if needed
   const processedQuestionText = question.questionText.replace("[PET_NAME]", petName);
@@ -203,20 +213,28 @@ export default function SecurityQuestion({
       
       {question.questionType === "select" && question.options && (
         <div className="space-y-2">
-          <Select onValueChange={setSelectAnswer} value={selectAnswer}>
+          <Select 
+            onValueChange={(value) => {
+              setSelectAnswer(value);
+            }} 
+            value={selectAnswer}
+            defaultValue={selectAnswer}
+          >
             <SelectTrigger className={absurdityLevel >= 5 ? "bg-yellow-50" : ""}>
               <SelectValue placeholder="Select your answer" />
             </SelectTrigger>
             <SelectContent>
               {question.options.map((option, index) => (
-                <SelectItem key={index} value={option}>
+                <SelectItem key={`select-option-${index}`} value={option}>
                   {option}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
           <p className="text-xs text-gray-500">
-            This is critical security information.
+            {absurdityLevel >= 6 ? 
+              "Your weapon choice reveals more about you than you think." : 
+              "This is critical security information."}
           </p>
         </div>
       )}
