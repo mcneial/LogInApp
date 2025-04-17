@@ -72,7 +72,8 @@ export function useQuestionFlow() {
         description: data.message || getWittyResponse(
           currentQuestion?.questionType || "text",
           variables.answer,
-          variables.questionId
+          variables.questionId,
+          currentQuestion?.questionText
         ),
       });
 
