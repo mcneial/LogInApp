@@ -216,7 +216,7 @@ export class MemStorage implements IStorage {
         questionType: "text",
         options: [],
         order: 7,
-        absurdityLevel: 7
+        absurdityLevel: 8
       },
       {
         questionText: "Please draw a picture of your password in your mind. On a scale of 1-10, how beautiful was it?",
