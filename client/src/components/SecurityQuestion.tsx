@@ -142,27 +142,39 @@ export default function SecurityQuestion({
       )}
       
       {question.questionType === "radio" && question.options && (
-        <RadioGroup 
-          value={radioAnswer} 
-          onValueChange={setRadioAnswer}
-          className="space-y-3"
-        >
-          {question.options.map((option, index) => (
-            <div className="flex items-center" key={index}>
-              <RadioGroupItem 
-                id={`q-option-${index}`} 
-                value={option}
-                className={absurdityLevel >= 4 ? "text-secondary focus:ring-secondary" : ""}
-              />
-              <Label 
-                htmlFor={`q-option-${index}`}
-                className="ml-2 block text-sm"
-              >
-                {option}
-              </Label>
-            </div>
-          ))}
-        </RadioGroup>
+        <div className="space-y-3">
+          <RadioGroup 
+            value={radioAnswer} 
+            onValueChange={(value) => {
+              console.log("Radio value changed to:", value);
+              setRadioAnswer(value);
+            }}
+            className="space-y-3"
+          >
+            {question.options.map((option, index) => (
+              <div className="flex items-center" key={`radio-option-${question.id}-${index}`}>
+                <RadioGroupItem 
+                  id={`q-option-${question.id}-${index}`} 
+                  value={option}
+                  className={absurdityLevel >= 4 ? "text-secondary focus:ring-secondary" : ""}
+                />
+                <Label 
+                  htmlFor={`q-option-${question.id}-${index}`}
+                  className="ml-2 block text-sm"
+                >
+                  {option}
+                </Label>
+              </div>
+            ))}
+          </RadioGroup>
+          {absurdityLevel >= 4 && (
+            <p className="text-xs text-gray-500 italic">
+              {absurdityLevel >= 7 
+                ? "Remember, your lies are being monitored for security purposes." 
+                : "Your selection will be scrutinized by our advanced truth detection algorithm."}
+            </p>
+          )}
+        </div>
       )}
       
       {question.questionType === "range" && (
@@ -188,9 +200,9 @@ export default function SecurityQuestion({
       {question.questionType === "checkbox" && question.options && (
         <div className="space-y-3">
           {question.options.map((option, index) => (
-            <div className="flex items-center" key={index}>
+            <div className="flex items-center" key={`check-option-${question.id}-${index}`}>
               <Checkbox
-                id={`check-option-${index}`}
+                id={`check-option-${question.id}-${index}`}
                 checked={checkboxAnswers.includes(option)}
                 onCheckedChange={(checked) => 
                   handleCheckboxChange(option, checked as boolean)
@@ -198,7 +210,7 @@ export default function SecurityQuestion({
                 className={absurdityLevel >= 8 ? "text-pink-500 focus:ring-pink-500" : ""}
               />
               <Label
-                htmlFor={`check-option-${index}`}
+                htmlFor={`check-option-${question.id}-${index}`}
                 className="ml-2 block text-sm"
               >
                 {option}
@@ -206,7 +218,9 @@ export default function SecurityQuestion({
             </div>
           ))}
           <p className="text-xs text-pink-500 mt-1">
-            Select all that apply. Musical analysis is critical for account recovery.
+            {absurdityLevel >= 7 
+              ? "Select all that apply. Musical analysis is critical for account recovery." 
+              : "Your password's musical taste will be used to verify your identity."}
           </p>
         </div>
       )}

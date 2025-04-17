@@ -65,51 +65,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         timestamp: new Date().toISOString()
       });
       
-      // Generate some witty response based on the answer
-      let responseMessage = "";
-      
-      switch (question.questionType) {
-        case "text":
-          if (answer.trim().length < 3) {
-            responseMessage = "That's... surprisingly brief. Are you hiding something?";
-          } else if (answer.trim().length > 50) {
-            responseMessage = "Wow, somebody likes to type! We appreciate the enthusiasm.";
-          } else {
-            responseMessage = "Interesting choice. Our AI will judge this... I mean, verify this shortly.";
-          }
-          break;
-          
-        case "radio":
-        case "select":
-          // Get random response for multiple choice
-          const multipleChoiceResponses = [
-            "An excellent choice! Or is it?",
-            "Really? That's what you're going with?",
-            "Our security experts are very impressed with this selection.",
-            "That's exactly what someone trying to hack an account would choose!"
-          ];
-          responseMessage = multipleChoiceResponses[Math.floor(Math.random() * multipleChoiceResponses.length)];
-          break;
-          
-        case "checkbox":
-          if (answer.includes(",")) {
-            responseMessage = "Choosing multiple options? Overachiever!";
-          } else {
-            responseMessage = "Just one option? Playing it safe, aren't we?";
-          }
-          break;
-          
-        case "range":
-          const rating = parseInt(answer);
-          if (rating <= 3) {
-            responseMessage = "Such a harsh critic of your own password!";
-          } else if (rating >= 8) {
-            responseMessage = "Someone's quite proud of their password artistry!";
-          } else {
-            responseMessage = "A middle-of-the-road password artist. Not bad.";
-          }
-          break;
-      }
+      // Import witty response function from client-side code 
+      // to ensure consistent responses across frontend/backend
+      const { getWittyResponse } = require("../client/src/lib/questions");
+      let responseMessage = getWittyResponse(question.questionType, answer, questionId);
       
       res.json({ 
         success: true, 
